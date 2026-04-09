@@ -1,0 +1,529 @@
+{
+  "stages": {
+       "B": {
+      "name": "B. Compliance Blocked",
+      "actual_timestamp": "",
+      "preceding_stage": null,
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "blocker",
+        "team_owner": "Procurement"
+      },
+      "fallback_calculation": {
+        "expression": "po_created_date"
+      },
+      "lead_time": "0"
+    },
+    "9A": {
+      "name": "09a. Production Delayed",
+      "actual_timestamp": "",
+      "preceding_stage": "['2','8','5']",
+      "process_flow": {
+        "critical_path": false,
+        "parallel_processes": [],
+        "process_type": "blocker",
+        "team_owner": "Supplier"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "0" 
+    }, 
+      "D": {
+      "name": "D. Master Data Blocker",
+      "actual_timestamp": "",
+      "preceding_stage": null,
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "blocker",
+        "team_owner": "Procurement"
+      },
+      "fallback_calculation": {
+        "expression": "po_created_date"
+      },
+      "lead_time": "0"
+    },
+    "1": {
+      "name": "01. PO Approval Pending",
+      "actual_timestamp": "po_approval_date",
+      "preceding_stage": "['po_created_date']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "approval",
+        "team_owner": "Procurement"
+      },
+      "fallback_calculation": {
+        "expression": ""  
+      },
+      "lead_time": "2"
+    },
+    "2": {
+      "name": "02. Supplier Confirmation Pending",
+      "actual_timestamp": "supplier_confirmation_date",
+      "preceding_stage": "['1']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "confirmation",
+        "team_owner": "Procurement"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "3"
+    },
+    "3": {
+      "name": "03. PI Upload Pending",
+      "actual_timestamp": "",
+      "preceding_stage": "cond(pi_applicable==1, ['2'], [])",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "documentation",
+        "team_owner": "Procurement"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "2"
+    },
+    "4": {
+      "name": "04. PI Approval Pending",
+      "actual_timestamp": "pi_invoice_approval_date",
+      "preceding_stage": "cond(pi_applicable==1, ['2'], [])",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "approval",
+        "team_owner": "Finance"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "3"
+    },
+    "5": {
+      "name": "05. PI Payment Pending",
+      "actual_timestamp": "pi_payment_date",
+      "preceding_stage": "cond(pi_applicable==1, ['4'], [])",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "payment",
+        "team_owner": "Finance"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "5"
+    },
+    "6": {
+      "name": "06. Packaging Pending",
+      "actual_timestamp": "",
+      "preceding_stage": "cond(pi_applicable==1, ['5'], ['2'])",
+      "process_flow": {
+        "critical_path": false,
+        "parallel_processes": ["7", "8"],
+        "process_type": "preparation",
+        "team_owner": "Operations"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "0"
+    },
+    "7": {
+      "name": "07. Transparency Label Pending",
+      "actual_timestamp": "",
+      "preceding_stage": "cond(pi_applicable==1, ['5'], ['2'])",
+      "process_flow": {
+        "critical_path": false,
+        "parallel_processes": ["6", "8"],
+        "process_type": "preparation",
+        "team_owner": "Operations"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "0"
+    },
+    "8": {
+      "name": "08. PRD Pending",
+      "actual_timestamp": "receive_first_prd_date",
+      "preceding_stage": "cond(pi_applicable==1, ['5'], ['2'])",
+      "process_flow": {
+        "critical_path": false,
+        "parallel_processes": ["6", "7"],
+        "process_type": "confirmation",
+        "team_owner": "Finance"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "3"
+    },
+    "9": {
+      "name": "09. Under Production",
+      "actual_timestamp": "",
+      "preceding_stage": "['final_prd_date-24']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "production",
+        "team_owner": "Supplier"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "0"
+    },
+    "10": {
+      "name": "10. PRD Confirmation Pending",
+      "actual_timestamp": "cond(final_prd_date-24 > prd_reconfirmed_date, '',prd_reconfirmed_date)",
+      "preceding_stage": "['final_prd_date-24']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "confirmation",
+        "team_owner": "Procurement"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "3"
+    },
+    "11": {
+      "name": "11. IM Sign-Off Pending",
+      "actual_timestamp": "po_im_date_value",
+      "preceding_stage": "['10', 'final_prd_date-21']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "approval",
+        "team_owner": "Operations"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "2"
+    },
+    "12": {
+      "name": "12. Ready for Batching Pending",
+      "actual_timestamp": "po_sm_date_value",
+      "preceding_stage": "['11']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "preparation",
+        "team_owner": "Operations"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "2"
+    },
+    "13": {
+      "name": "13. Batch Creation Pending",
+      "actual_timestamp": "batch_created_ts",
+      "preceding_stage": "['12','final_prd_date-9']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "processing",
+        "team_owner": "Operations"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "2"
+    },
+    "14": {
+      "name": "14. SM Sign-Off Pending",
+      "actual_timestamp": "sm_signoff_ts",
+      "preceding_stage": "['13']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "approval",
+        "team_owner": "Operations"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "4"
+    },
+    "15": {
+      "name": "15. CI Approval Pending",
+      "actual_timestamp": "ci_invoice_approval_date",
+      "preceding_stage": "cond(ci_applicable==1, ['14'], [])",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "approval",
+        "team_owner": "Finance"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "3"
+    },
+    "16": {
+      "name": "16. CI Payment Pending",
+      "actual_timestamp": "ci_payment_date",
+      "preceding_stage": "cond(ci_applicable==1, ['14','15','final_prd_date-8'], [])",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "payment",
+        "team_owner": "Finance"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "7"
+    },
+    "17": {
+      "name": "17. QC Schedule Pending",
+      "actual_timestamp": "qc_schedule_date",
+      "preceding_stage": "['14','final_prd_date-10']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "scheduling",
+        "team_owner": "Quality"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "2"
+    },
+    "18": {
+      "name": "18. FFW Booking Missing",
+      "actual_timestamp": "ffw_booking_ts",
+      "preceding_stage": "['14']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "booking",
+        "team_owner": "Logistics"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "3"
+    },
+    "19": {
+      "name": "19. Supplier Pickup Date Pending",
+      "actual_timestamp": "spd_ts",
+      "preceding_stage": "['16','14','18','final_prd_date-7']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "scheduling",
+        "team_owner": "Logistics"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "3"
+    },
+    "20": {
+      "name": "20. Pre Pickup Check",
+      "actual_timestamp": "",
+      "preceding_stage": "['19',qi_date]",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "inspection",
+        "team_owner": "Quality"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "2"
+    },
+    "21": {
+      "name": "21. FOB Pickup Pending",
+      "actual_timestamp": "actual_cargo_pick_up_date",
+      "preceding_stage": "['19', 'final_prd_date', 'qi_date', 'batch_spd-7' ]",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": ["22"],
+        "process_type": "pickup",
+        "team_owner": "Logistics"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "7"
+    },
+    "22": {
+      "name": "22. Non FOB Pickup Pending",
+      "actual_timestamp": "actual_cargo_pick_up_date",
+      "preceding_stage": "['19', 'final_prd_date', 'qi_date', 'batch_spd-7']",
+      "process_flow": {
+        "critical_path": false,
+        "parallel_processes": ["21"],
+        "process_type": "pickup",
+        "team_owner": "Logistics"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "7"
+    },
+    "23": {
+      "name": "23. INB Creation Pending",
+      "actual_timestamp": "shipment_creation_date",
+      "preceding_stage": "cond(inco=='FOB',['actual_cargo_pick_up_date','stock_pickup_date'],['actual_cargo_pick_up_date','stock_pickup_date'])",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "documentation",
+        "team_owner": "Logistics"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "7"
+    },
+    "24": {
+      "name": "24. Mark In-Transit Pending",
+      "actual_timestamp": "shipment_in_transit_date",
+      "preceding_stage": "['23','actual_shipping_date']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "tracking",
+        "team_owner": "Logistics"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "5"
+    },
+    "25": {
+      "name": "25. BL Approval Pending",
+      "actual_timestamp": "bi_invoice_approval_date",
+      "preceding_stage": "['24']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "approval",
+        "team_owner": "Finance"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "3"
+    },
+    "26": {
+      "name": "26. BL Payment Pending - In Transit",
+      "actual_timestamp": "bi_payment_date",
+      "preceding_stage": "['25','ETA-13']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": ["27"],
+        "process_type": "payment",
+        "team_owner": "Finance"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "7"
+    },
+    "27": {
+      "name": "27. BL Payment Pending - Arrived",
+      "actual_timestamp": "bi_payment_date",
+      "preceding_stage": "['25', 'actual_arrival_date', 'min(ETA-6, actual_arrival_date + 7)']",
+      "process_flow": {
+        "critical_path": false,
+        "parallel_processes": ["26"],
+        "process_type": "payment",
+        "team_owner": "Finance"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "3"
+    },
+    "28": {
+      "name": "28. Telex Release Pending",
+      "actual_timestamp": "ffwp_telex_release_date",
+      "preceding_stage": "['26', '27', 'actual_arrival_date', 'ETA-6']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "release",
+        "team_owner": "Finance"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "5"
+    },
+    "29": {
+      "name": "29. Custom Clearance Pending",
+      "actual_timestamp": "customs_clearance_date",
+      "preceding_stage": "['actual_arrival_date']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "delivery",
+        "team_owner": "Logistics"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "1"
+    },
+    "30": {
+      "name": "30. Stock Delivery Pending",
+      "actual_timestamp": "shipment_stock_delivery_date",
+      "preceding_stage": "['ffwp_telex_release_date','29', 'actual_arrival_date']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "delivery",
+        "team_owner": "Logistics"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "11"
+    },
+    "31": {
+      "name": "31. Stock Receiving Pending",
+      "actual_timestamp": "item_receipt_date",
+      "preceding_stage": "['30','actual_delivery_date']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "receiving",
+        "team_owner": "Warehouse"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "5"
+    },
+    "32": {
+      "name": "32. Dispute - PO Closing Pending",
+      "actual_timestamp": "",
+      "preceding_stage": "['31']",
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "process_type": "closure",
+        "team_owner": "Finance"
+      },
+      "fallback_calculation": {
+        "expression": ""
+      },
+      "lead_time": "2"
+    }
+  }
+}

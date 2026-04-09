@@ -1,0 +1,1 @@
+# File deleted - functionality integrated into stage_calculator.py

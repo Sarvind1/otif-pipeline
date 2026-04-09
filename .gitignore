@@ -1,2 +1,38 @@
+outputs/
+
+# Credentials & secrets
 creds.txt
-otif_v1.ipynb
+*.env
+.env*
+
+# Sensitive/local data
+local_data_dnd/
+all_dataframes.pkl
+
+# macOS
+.DS_Store
+F5AD7710
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+*.ipynb
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Temp/lock Excel files
+~$*.xlsx
+~$*.xls
+
+# Large/raw data files
+*.pkl
+*.csv
+days_bucket_old.xlsx
+ts_big*.xlsx
+ts_small*.xlsx
+dod_sql_output*.xlsx
+dod_in.xlsx
+dod_check.xlsx
+OTIF\ Working\ Sheet*.xlsx

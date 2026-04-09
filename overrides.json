@@ -1,0 +1,118 @@
+{
+  "rules": [
+    {
+      "status": "29. Custom Clearance Pending",
+      "conditions": [
+        {"col": "Sub Status #", "op": "==", "val": "29a"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "On track"
+    },
+    {
+      "status": "29. Custom Clearance Pending",
+      "conditions": [
+        {"col": "Sub Status #", "op": "==", "val": "29c"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "On track"
+    },
+    {
+      "status": "22. Non FOB Pickup Pending",
+      "conditions": [
+        {"col": "Sub Status #", "op": "==", "val": "22a"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "On track"
+    },
+    {
+      "status": "21. FOB Pickup Pending",
+      "conditions": [
+        {"col": "Sub Status #", "op": "==", "val": "21b"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "On track"
+    },
+    {
+      "status": "21. FOB Pickup Pending",
+      "conditions": [
+        {"col": "Sub Status #", "op": "==", "val": "21c"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "On track"
+    },
+    {
+      "status": "19. Supplier Pickup Date Pending",
+      "conditions": [
+        {"col": "Sub Status #", "op": "==", "val": "19c"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "On track"
+    },
+    {
+      "status": "20. Pre Pickup Check",
+      "conditions": [
+        {"col": "Sub Status #", "op": "==", "val": "20c"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "On track"
+    },
+    {
+      "status": "06. Packaging Pending",
+      "conditions": [
+        {"col": "pi_payment_date", "op": "==", "val": "nan"},
+        {"col": "pi_applicable", "op": "==", "val": "1"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "Missing"
+    },
+    {
+      "status": "08. PRD Pending",
+      "conditions": [
+        {"col": "pi_payment_date", "op": "==", "val": "nan"},
+        {"col": "pi_applicable", "op": "==", "val": "1"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "Missing"
+    },
+    {
+      "status": "10. PRD Confirmation Pending",
+      "conditions": [
+        {"col": "historical_anti-po", "op": "==", "val": "Yes"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "1"
+    },
+    {
+      "status": "11. IM Sign-Off Pending",
+      "conditions": [
+        {"col": "historical_anti_po", "op": "==", "val": "Yes"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "1"
+    },
+    {
+      "status": "13. Batch Creation Pending",
+      "conditions": [
+        {"col": "po_sm_date_value", "op": "==", "val": "nan"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "Missing"
+    },
+    {
+      "status": "17. QC Schedule Pending",
+      "conditions": [
+        {"col": "sm_signoff_ts", "op": "==", "val": "nan"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "Missing"
+    },
+    {
+      "status": "18. FFW Booking Missing",
+      "conditions": [
+        {"col": "sm_signoff_ts", "op": "==", "val": "nan"}
+      ],
+      "target_column": "dod_overwrite",
+      "text": "Missing"
+    }
+  ]
+}
