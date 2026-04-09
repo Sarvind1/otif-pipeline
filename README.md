@@ -1,77 +1,105 @@
-# OTIF Pipeline
+# OTIF Automation Pipeline
 
-An automated data pipeline for calculating On-Time In-Full (OTIF) delivery metrics and purchase order turnaround time (TAT) analysis. Ingests purchase order data from Redshift, processes through configurable delivery stages, and exports analytics to Excel/CSV and SharePoint.
+An automated supply chain management system that calculates On-Time In-Full (OTIF) metrics and Turn-Around Time (TAT) for purchase order processing. The pipeline ingests data from Redshift and Excel sources, performs complex multi-stage calculations with dependency tracking, and exports results to Excel and SharePoint.
 
-## Features
+## Key Features
 
-- **Multi-source Data Ingestion**: Fetch PO and operational data from Redshift with concurrent processing
-- **Configurable Stage Calculator**: Dynamic TAT calculation for each delivery stage with dependency management
-- **Comprehensive Delay Analysis**: Track delays and missed targets across the supply chain workflow
-- **Bulk Export**: Generate Excel and CSV reports with stage-level analysis
-- **SharePoint Integration**: Automated upload of results to SharePoint for stakeholder access
-- **Mapping & Enrichment**: Apply business rules via static lookup tables (payment terms, blockers, compliance data)
+- **Multi-threaded Data Ingestion**: Efficiently fetch purchase order and supplier data from Redshift using concurrent connections
+- **Reference Data Management**: Load and map static/dynamic reference data from Excel files (vendor mappings, payment terms, compliance data, etc.)
+- **Stage-based TAT Calculation**: Calculate adjusted timestamps through configurable supply chain stages (PO creation, receipt, customs clearance, warehouse inbound, etc.) with dependency-driven logic
+- **Flexible Expression Evaluation**: Support dynamic date expressions and stage dependencies for complex business rules
+- **Day-of-Day (DoD) Analysis**: Generate day-by-day performance metrics and delay analysis
+- **Batch Processing & Exports**: Generate detailed Excel and JSON output files with stage-level analysis
+- **SharePoint Integration**: Automatically upload results and logs to SharePoint for team visibility
 
 ## Tech Stack
 
-- **Python 3.x** with pandas, numpy for data processing
-- **Redshift** for data warehouse connectivity (via psycopg2)
-- **Excel/CSV** file handling (openpyxl, xlrd)
-- **SharePoint** client integration
-- **Jupyter Notebooks** for exploratory analysis and testing
+- **Python 3.x**: Core automation language
+- **pandas**: Data manipulation and analysis
+- **Redshift**: Data warehouse for PO and supplier data
+- **openpyxl / xlrd**: Excel file handling
+- **SharePoint API**: Result publishing
+- **Pydantic**: Configuration validation and data models
+- **Jupyter Notebooks**: Development and testing
 
 ## Setup
 
-1. **Create virtual environment:**
+### Prerequisites
+- Python 3.7+
+- Access to Redshift database with purchase order and supplier data
+- SharePoint credentials (for upload step)
+- Local reference data files in `local_data_dnd/`
+
+### Installation
+
+1. Create and activate a virtual environment:
    ```bash
    python3 -m venv .venv
-   source .venv/bin/activate
+   source .venv/bin/activate  # macOS/Linux
+   # or
+   .venv\Scripts\activate  # Windows
    ```
 
-2. **Install dependencies:**
+2. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   pip install pandas openpyxl pydantic requests sharepoint
    ```
 
-3. **Configure credentials:**
-   Create a `creds.txt` file with Redshift and AWS credentials:
+3. Configure credentials in `creds.txt`:
    ```
-   user=<redshift_user>
-   password=<redshift_password>
-   database=<database_name>
-   host=<redshift_host>
-   port=5439
-   AWS_ACCESS_KEY_ID=<aws_key>
-   AWS_SECRET_ACCESS_KEY=<aws_secret>
+   redshift_user=<user>
+   redshift_password=<password>
+   redshift_host=<host>
+   redshift_port=5439
+   redshift_database=<database>
+   sharepoint_user=<user>
+   sharepoint_password=<password>
    ```
 
-4. **Place data mappings:**
-   Ensure mapping CSVs are in `local_data_dnd/excels/` and table snapshots in `local_data_dnd/tables/`
+### Running the Pipeline
 
-## Usage
-
-Run the full pipeline:
 ```bash
 python app.py
 ```
 
-This orchestrates:
-1. Load credentials and configuration
-2. Ingest tables from Redshift (multithreaded)
-3. Load lookup/mapping Excel files
-4. Calculate OTIF metrics and TAT delays
-5. Generate day-over-day analysis
-6. Export results to Excel and SharePoint
+The script will:
+1. Load credentials from `creds.txt`
+2. Ingest tables from Redshift (multi-threaded)
+3. Load reference data from Excel files
+4. Calculate OTIF and TAT metrics
+5. Generate Day-of-Day analysis
+6. Export results to `outputs/` directory
+7. Upload to SharePoint
 
-Outputs are saved to `outputs/` directory with timestamps.
+## Output Files
+
+- **CSV Exports**: `outputs/csv_files/processed_data_*.csv` — Stage-level detail data
+- **Excel Reports**: `outputs/excel_exports/stage_level_analysis_*.xlsx` — Formatted stage analysis
+- **TAT Results**: `outputs/tat_results/tat_results_*.json` — Complete calculation results with reasoning
+- **Logs**: `outputs/logs/tat_calculation.log` — Detailed pipeline execution logs
+
+## Configuration
+
+TAT stages and calculation rules are defined in stage configuration files. Each stage supports:
+- Projected/Actual/Adjusted calculation methods
+- Configurable lead times
+- Dynamic expression-based calculations
+- Dependency on preceding stages
+
+Modify stage configs to adjust calculation logic for your business rules.
 
 ## Project Structure
 
-- **app.py** - Main entry point and orchestration
-- **main.py** - Core metric calculation logic
-- **tat_calculator.py** - TAT engine with configurable stages
-- **stage_calculator_*.py** - Individual stage delay calculations
-- **ingestion_tables_multithreading.py** - Redshift data fetch with threading
-- **ingestion_excels.py** - Load mapping/configuration tables
-- **dod.py** - Day-over-day analysis
-- **local_data_dnd/** - Static lookup tables and reference data
-- **documentation/** - Architecture and commit guides
+```
+├── main.py                    # Core calculation orchestrator
+├── app.py                     # Pipeline entry point with SharePoint integration
+├── ingestion_tables_multithreading.py  # Redshift data fetch
+├── ingestion_excels.py        # Excel reference data loading
+├── tat_calculator.py          # TAT calculation engine
+├── stage_calculator_*.py      # Individual stage calculation logic
+├── dod.py                     # Day-of-Day analysis
+├── expression_evaluator.py    # Dynamic expression evaluation
+├── models_config.py           # Pydantic configuration models
+├── local_data_dnd/            # Reference data (mappings, lookups)
+└── outputs/                   # Generated results and logs
+```

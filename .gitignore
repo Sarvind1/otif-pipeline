@@ -1,5 +1,3 @@
-outputs/
-
 # Credentials & secrets
 creds.txt
 *.env
@@ -11,16 +9,53 @@ all_dataframes.pkl
 
 # macOS
 .DS_Store
-F5AD7710
+.AppleDouble
+.LSOverride
+Thumbs.db
 
-# Jupyter checkpoints
+# Jupyter/IPython
 .ipynb_checkpoints/
 *.ipynb
-
-# Python cache
 __pycache__/
-*.pyc
-*.pyo
+.ipython/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
 # Temp/lock Excel files
 ~$*.xlsx
@@ -28,11 +63,27 @@ __pycache__/
 
 # Large/raw data files
 *.pkl
-*.csv
 days_bucket_old.xlsx
 ts_big*.xlsx
 ts_small*.xlsx
+
+# PO data working sheets
+OTIF\ Working\ Sheet*.xlsx
 dod_sql_output*.xlsx
 dod_in.xlsx
 dod_check.xlsx
-OTIF\ Working\ Sheet*.xlsx
+
+# Generated output files (keep config, ignore results)
+outputs/csv_files/
+outputs/excel_exports/
+outputs/tat_results/
+outputs/logs/
+
+# Large CSV/data exports
+final_df*.csv
+Cell\ output*.csv
+rules_csv.csv
+
+# Miscellaneous large files
+F5AD7710
+tat_calculation.log
